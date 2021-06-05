@@ -2,7 +2,7 @@
 
 build you image
 
-`$ docker build -rm -t=elasticsearch-kibana
+`$ docker build . -t=elasticsearch-kibana
 `
 
 run your container
