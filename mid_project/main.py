@@ -9,7 +9,9 @@ from elasticsearch import Elasticsearch
 from configration import *
 
 # create instance of elasticsearch
-es = Elasticsearch()
+# es = Elasticsearch()
+es = Elasticsearch(hosts=[{'host': 'localhost', 'port': 9200}])
+
 
 class TweetStreamListener(StreamListener):
 
@@ -36,12 +38,26 @@ class TweetStreamListener(StreamListener):
         # output sentiment
         print(sentiment)
 
+        if dict_data["user"]["location"] != None:
+            user_geo = dict_data["user"]["location"]
+        elif dict_data["geo"] != None:
+            user_geo = dict_data["geo"]
+        elif dict_data["place"] != None:
+            user_geo = dict_data["place"]
+        else:
+            user_geo = 'unknown'
+
+
+
+
+
         # add text and sentiment info to elasticsearch
-        es.index(index="sentiment",
+        es.index(index="sentiment_israel",
                  doc_type="test-type",
                  body={"author": dict_data["user"]["screen_name"],
                        "date": dict_data["created_at"],
                        "message": dict_data["text"],
+                       "geo": user_geo,
                        "polarity": tweet.sentiment.polarity,
                        "subjectivity": tweet.sentiment.subjectivity,
                        "sentiment": sentiment})
@@ -64,4 +80,5 @@ if __name__ == '__main__':
     stream = Stream(auth, listener)
 
     # search twitter for "congress" keyword
-    stream.filter(track=['congress'])
+    stream.filter(track=['israel'])
+

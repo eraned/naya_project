@@ -1,5 +1,9 @@
 # **instructions** 
 
+create twitter app with developer account on twitter 
+
+http://apps.twitter.com
+
 build you image
 
 `$ docker build . -t=elasticsearch-kibana
