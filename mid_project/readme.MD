@@ -1,15 +1,16 @@
-# **instructions** 
+# Instructions
 
-create twitter app with developer account on twitter 
+1. Create Twitter App with developer account on twitter 
 
-http://apps.twitter.com
+**http://apps.twitter.com**
 
-build you image
+2. Bring up a local ElasticSearch + Kibana docker environment
 
-`$ docker build . -t=elasticsearch-kibana
-`
+```
+$ docker-compose up
+```
 
-run your container
-
-`$ docker run -d -p 8000:8000 -p 9200:9200 elasticsearch-kibana
-`
+3. Run the python program, which will stream live tweets (according to the filter assigned) and store the relevant data inside ElasticSerch. For example, the following command will filter streaming tweets with the keyword "israel" and store them in the index_israel index (which will be created if doesn't already exist).
+```
+python main.py --index-name index_israel --filter israel
+```
