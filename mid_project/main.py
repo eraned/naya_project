@@ -13,6 +13,7 @@ from configration import *
 # create instance of elasticsearch
 es = Elasticsearch(hosts=[{'host': 'localhost', 'port': 9200}])
 
+
 class TweetStreamListener(StreamListener):
     def __init__(self, es_index_name):
         self.es_index_name = es_index_name
@@ -27,7 +28,7 @@ class TweetStreamListener(StreamListener):
         tweet = TextBlob(dict_data["text"])
 
         # output sentiment polarity
-        print (tweet.sentiment.polarity)
+        print(tweet.sentiment.polarity)
 
         # determine if sentiment is positive, negative, or neutral
         if tweet.sentiment.polarity < 0:
@@ -42,26 +43,26 @@ class TweetStreamListener(StreamListener):
 
         if dict_data["user"]["location"] != None:
             user_geo = dict_data["user"]["location"]
-        #There was an issue parsing the 'geo' attribute - TODO
+        # There was an issue parsing the 'geo' attribute - TODO
         # elif dict_data["geo"] != None: 
-            # user_geo = dict_data["geo"]
+        # user_geo = dict_data["geo"]
         elif dict_data["place"] != None:
             user_geo = dict_data["place"]
         else:
             user_geo = 'unknown'
 
         print(f'Discovered GEO: {user_geo}')
-        
+
         for c in pycountry.countries:
             if c.name in user_geo or c.alpha_2 in user_geo:
-                #Country's name
+                # Country's name
                 print(c.name)
-                #Country's code
+                # Country's code
                 print(c.alpha_2)
                 user_geo = c.name
                 break
         print(f'Final GEO: {user_geo}')
-        
+
         # add text and sentiment info to elasticsearch
         es.index(index=self.es_index_name,
                  doc_type="test-type",
@@ -76,7 +77,8 @@ class TweetStreamListener(StreamListener):
 
     # on failure
     def on_error(self, status):
-        print (status)
+        print(status)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Twitter topic arguments')
